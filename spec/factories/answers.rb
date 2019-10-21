@@ -1,10 +1,14 @@
 FactoryBot.define do
-  factory :answer do
-    body { "MyText" }
-    question
+  sequence :answer_body do |n|
+    "Body #{n}"
+  end
 
-    trait :invalid do
-      body { nil }
-    end
+  factory :answer do
+    body
+    question
+  end
+
+  trait :invalid do
+    body { nil }
   end
 end
