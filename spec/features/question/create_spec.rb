@@ -22,24 +22,28 @@ feature 'User can create question', %q{
       click_on 'Ask'
 
       expect(page).to have_content 'Your question successfully created.'
-      expect(page).to have_content 'Test question'
-      expect(page).to have_content 'text text text'
+      expect(page).to have_content user.questions.last.title
+      expect(page).to have_content user.questions.last.body
 
     end
 
     scenario 'asks a question with errors' do
+      #sign_in(user)
+
+      visit questions_path
+      #click_on 'Ask question'
       click_on 'Ask'
 
       expect(page).to have_content "Title can't be blank"
+      expect(page).to have_content "Body can't be blank"
     end
   end
 
   scenario 'Unauthenticated user asks a question with errors' do
-    visit questions_path
+    #visit questions_path
     click_on 'Ask question'
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
-
   end
 
 end
