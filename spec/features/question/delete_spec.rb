@@ -21,10 +21,10 @@ feature 'User can delete question' do
 
   scenario 'Not author remove question' do
     sign_in(any_auth_user)
-    expect(page).to_not have_content 'Remove question'
+    expect(page).to_not have_content 'Delete question'
   end
 
   scenario 'Not authenticated user asks a question' do
-    expect(page).to_not have_content 'Remove question'
+    expect(page).to_not have_content 'Delete question'
   end
 end
