@@ -28,10 +28,6 @@ feature 'User can create question', %q{
     end
 
     scenario 'asks a question with errors' do
-      #sign_in(user)
-
-      visit questions_path
-      #click_on 'Ask question'
       click_on 'Ask'
 
       expect(page).to have_content "Title can't be blank"
@@ -40,12 +36,11 @@ feature 'User can create question', %q{
   end
 
   scenario 'Unauthenticated user asks a question with errors' do
-    #visit questions_path
+    visit questions_path
     click_on 'Ask question'
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
-
 end
 
 
