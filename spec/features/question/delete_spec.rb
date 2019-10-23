@@ -6,7 +6,7 @@ feature 'User can delete question' do
   given(:question) { create(:question, user: author) }
 
   background do
-    visit question_path(question)
+    visit questions_path
   end
 
   scenario 'Author remove question' do
