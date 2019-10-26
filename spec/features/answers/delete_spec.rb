@@ -26,6 +26,6 @@ feature 'User can delete answer' do
     end
 
     scenario 'Not authenticated user delete answer' do
-      expect(page).to_not have_content 'Delete answer'
+      expect(page).to_not have_content 'Remove answer'
     end
 end
