@@ -31,15 +31,23 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-    before { login(user) }
-    before { get :new }
+    context 'Authenticated user' do
+      before { login(user) }
+      before { get :new }
 
-    it 'assigns a new Question to @question' do
-      expect(assigns(:question)).to be_a_new(Question)
+      it 'assigns a new Question to @question' do
+        expect(assigns(:question)).to be_a_new(Question)
+      end
+
+      it 'render new view' do
+        expect(response).to render_template :new
+      end
     end
 
-     it 'render new view' do
-      expect(response).to render_template :new
+    context 'Not authenticated user' do
+      it 'render new view' do
+        expect(response).to render_template :new
+      end
     end
   end
 
