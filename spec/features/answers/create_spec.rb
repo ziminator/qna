@@ -33,6 +33,6 @@ feature 'User can create answer', %q{
   scenario 'Not authenticated user answer a question' do
     visit question_path(question)
 
-    expect(page).to_not have_content 'Answer'
+    expect(page).to_not have_link 'Answer'
   end
 end

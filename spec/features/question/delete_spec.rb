@@ -9,7 +9,8 @@ feature 'User can delete question' do
     sign_in(author)
 
     visit question_path(question)
-    expect(page).to have_content 'Remove question'
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
 
     click_on 'Remove question'
 
@@ -21,11 +22,11 @@ feature 'User can delete question' do
   scenario 'Not author remove question' do
     sign_in(any_auth_user)
     visit question_path(question)
-    expect(page).to_not have_content 'Remove question'
+    expect(page).to_not have_link 'Remove question'
   end
 
   scenario 'Not authenticated user asks a question' do
     visit question_path(question)
-    expect(page).to_not have_content 'Remove question'
+    expect(page).to_not have_link 'Remove question'
   end
 end

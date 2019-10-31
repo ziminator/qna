@@ -7,8 +7,8 @@ RSpec.describe AnswersController, type: :controller do
   let!(:answer) { create(:answer, question: question, user: user) }
 
   describe 'POST #create' do
-    before { login(user) }
     context 'with valid attributes' do
+      before { login(user) }
       it 'saves new answer in the database with assign user as author' do
 
         expect { post :create,
@@ -18,8 +18,8 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'saves the association to question' do
-       post :create, params: { answer: attributes_for(:answer), question_id: question }
-       expect(assigns(:answer).question).to eq question
+        post :create, params: { answer: attributes_for(:answer), question_id: question }
+        expect(assigns(:answer).question).to eq question
       end
 
       it 'redirects to question' do
@@ -29,6 +29,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid attributes' do
+      before { login(user) }
       it "doesn't save a new answer in database" do
         expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to_not change(Answer, :count)
       end
@@ -36,6 +37,13 @@ RSpec.describe AnswersController, type: :controller do
       it 're-render question' do
         post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
         expect(response).to render_template 'questions/show'
+      end
+    end
+
+    context 'guest cannot make answers' do
+      it 'redirect to question' do
+        post :create, params: { answer: attributes_for(:answer), question_id: question }
+        expect(response).to redirect_to user_session_path
       end
     end
   end
@@ -55,9 +63,9 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'user is not an author' do
-      let!(:not_user) { create (:user) }
+      let!(:not_author) { create (:user) }
 
-      before { login(not_user) }
+      before { login(not_author) }
       before { answer }
 
       it 'delete answer' do
@@ -67,6 +75,12 @@ RSpec.describe AnswersController, type: :controller do
       it 'redirect to index view' do
         delete :destroy, params: { id: answer }
         expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+
+    context 'guest cannot delete answer' do
+      it 'delete answer' do
+        expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
       end
     end
   end
