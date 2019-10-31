@@ -10,11 +10,8 @@ RSpec.describe AnswersController, type: :controller do
     context 'with valid attributes' do
       before { login(user) }
       it 'saves new answer in the database with assign user as author' do
-
-        expect { post :create,
-                 params: { answer: attributes_for(:answer),
-                 question_id: question }
-               }.to change(user.answers, :count).by(1)
+        expect { post :create, params: { answer: attributes_for(:answer),
+                 question_id: question } }.to change(user.answers, :count).by(1)
       end
 
       it 'saves the association to question' do
@@ -43,6 +40,8 @@ RSpec.describe AnswersController, type: :controller do
     context 'guest cannot make answers' do
       it 'redirect to question' do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
+        expect { post :create, params: { answer: attributes_for(:answer),
+                 question_id: question } }.not_to change(user.answers, :count)
         expect(response).to redirect_to user_session_path
       end
     end
@@ -81,6 +80,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'guest cannot delete answer' do
       it 'delete answer' do
         expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
+        expect(response).to redirect_to user_session_path
       end
     end
   end
