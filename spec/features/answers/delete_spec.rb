@@ -15,6 +15,7 @@ feature 'User can delete answer' do
       click_on 'Remove answer'
 
       expect(page).to have_content 'Your answer deleted sucessfully!'
+      expect(page).to_not have_content answer.body
     end
 
     scenario 'Non author delete answer' do
@@ -22,11 +23,11 @@ feature 'User can delete answer' do
 
       visit question_path(question)
 
-      expect(page).to_not have_content 'Remove answer'
+      expect(page).to_not have_link 'Remove answer'
     end
 
     scenario 'Not authenticated user delete answer' do
       visit question_path(question)
-      expect(page).to_not have_content 'Remove answer'
+      expect(page).to_not have_link 'Remove answer'
     end
 end
