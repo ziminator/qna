@@ -38,7 +38,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'guest cannot make answers' do
-      it 'redirect to question' do
+      it 'redirect to user sign in' do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
         expect { post :create, params: { answer: attributes_for(:answer),
                  question_id: question } }.not_to change(user.answers, :count)
@@ -77,8 +77,8 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    context 'guest cannot delete answer' do
-      it 'delete answer' do
+    context 'guests' do
+      it 'can not delete answer' do
         expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
         expect(response).to redirect_to user_session_path
       end
