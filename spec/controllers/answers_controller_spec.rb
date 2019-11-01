@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:author) { create(:user) }
+  let!(:not_author) { create (:user) }
   let(:question) { create(:question, user: user) }
   let!(:answer) { create(:answer, question: question, user: user) }
 
@@ -62,10 +63,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'user is not an author' do
-      let!(:not_author) { create (:user) }
-
       before { login(not_author) }
-      before { answer }
 
       it 'delete answer' do
         expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
