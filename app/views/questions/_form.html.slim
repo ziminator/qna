@@ -1,0 +1,7 @@
+= form_with model: @question, class: 'hidden', html: { id: "edit-question-form" } do |f|
+  = render 'shared/errors', resource: @question
+  = f.label :title, 'Your title'
+  = f.text_field :title
+  = f.label :body, 'Your body'
+  = f.text_area :body
+  = f.submit 'Save'

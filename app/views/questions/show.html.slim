@@ -1,15 +1,14 @@
-h1= @question.title
-p= @question.body
+.question
+  .question-title = @question.title
+  .question-body = @question.body
+  .question-errors
+
+  - if current_user&.author?(@question)
+    = link_to 'Edit question', '#', class: 'edit-question-link'
+    = link_to 'Remove question', question_path(@question), method: :delete
+    = render 'form'
 
 .answers
   = render @question.answers
 
-.answer-errors
-  = render 'shared/errors', resource: @answer
-= form_with model: [@question, @answer], class: 'new-answer' do |f|
-  = f.label :body, 'Your answer'
-  = f.text_area :body
-  = f.submit 'Create'
-
-- if current_user&.author?(@question)
-  = link_to 'Remove question', question_path(@question), method: :delete
+= render 'answers/form'

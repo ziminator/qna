@@ -38,6 +38,10 @@ class AnswersController < ApplicationController
     redirect_to @answer.question
   end
 
+  def best_answer
+    @answer.best_answer! if current_user.author?(@answer.question)
+  end
+
   private
 
   def find_question
