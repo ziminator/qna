@@ -5,7 +5,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:author) { create(:user) }
   let!(:not_author) { create (:user) }
   let(:question) { create(:question, user: user) }
-  let!(:answer) { create(:answer, question: question, user: user) }
+  let!(:answer) { create(:answer, question: question, user: author) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -74,6 +74,22 @@ RSpec.describe AnswersController, type: :controller do
       it 'renders update view' do
         patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
         expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #best' do
+
+    context 'user an author' do
+      before { login(author) }
+      before { patch :best, params: { id: answer, format: :js } }
+
+      it 'assigns the request answer to @answer' do
+        expect(assigns(:answer)).to eq answer
+      end
+
+      it 'render answer best' do
+        expect(response).to render_template :best
       end
     end
   end
