@@ -13,15 +13,17 @@ RSpec.describe Answer, type: :model do
     let!(:best_answer) { create(:answer, question: question, user: user, best: true) }
     let(:answer) { create(:answer, question: question, user: user) }
 
-    before { answer.best! }
-    before { best_answer.reload }
+    before(:each) do
+      answer.best_answer!
+      best_answer.reload
+    end
 
     it 'should make answer the best' do
       expect(answer).to be_best
     end
 
     it 'should change the best answer' do
-      best_answer.best!
+      best_answer.best_answer!
       answer.reload
 
       expect(answer).to_not be_best
@@ -32,9 +34,11 @@ RSpec.describe Answer, type: :model do
       expect(question.answers.best.count).to eq 1
     end
 
-    it 'best answer is first in list' do
-      best_answer.best!
-      expect(best_answer).to eq question.answers.first
+    it 'best answer is in list' do
+      best_answer.best_answer!
+      Answer.where(id: answer).each do |a|
+        expect(a.best).to eq false
+      end
     end
   end
 end
