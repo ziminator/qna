@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'Best answer', %q{
-  to cheese the answer which is the best
+  to choose the answer which is the best
   As an authenticated user
   I want to be able to set best answer to my question
 } do

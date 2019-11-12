@@ -6,14 +6,19 @@ feature 'User can sign out', %q{
   I'd like to sign out.
 } do
 
-  given!(:user) { create(:user) }
+  given(:user) { create(:user) }
 
-  background { sign_in(user)}
+  describe 'Click on Sign out link' do
+    background { sign_in(user) }
+    scenario 'Registered user tries to sign out' do
+      click_on 'Sign out'
 
-  scenario 'Registered user tries to sign out' do
-    click_on 'Sign out'
+      expect(page).to have_content 'Signed out successfully.'
+      expect(current_path).to eq root_path
+    end
+  end
 
-    expect(page).to have_content 'Signed out successfully.'
-    expect(current_path).to eq root_path
+  scenario 'Unregistered user tries to sign out' do
+    expect(page).to_not have_link 'Sign out'
   end
 end

@@ -49,48 +49,88 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let!(:answer) { create(:answer, question: question) }
+    describe 'author updates answer' do
+      before { login(author) }
 
     context 'with valid attributes' do
       it 'changes answer attributes' do
-        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js
         answer.reload
-        expect(answer.body).to eq 'new body'
+        expect(answer.body).to eq 'New body'
       end
 
-      it 'renders update view' do
-        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
-        expect(response).to render_template :update
+      it 'renders :update back to question' do
+          patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid attributes'do
+        before { patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid), question_id: question }, format: :js }
+
+        it "doesn't changes answer attributes" do
+          answer.reload
+          expect(answer.body).to eq "MyText"
+        end
+
+        it 'renders :update' do
+          expect(response).to render_template :update
+        end
       end
     end
 
-    context 'with invalid attributes' do
-      it 'does not change answer attributes' do
-        expect do
-          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
-        end.to_not change(answer, :body)
+    describe 'Non-author user updates question' do
+      before { login(user) }
+      before { patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js }
+
+      it "does not changes question attributes" do
+        question.reload
+
+        expect(question.body).to_not eq "New body"
       end
 
-      it 'renders update view' do
-        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
-        expect(response).to render_template :update
+      it 're-render edit' do
+        expect(response).to redirect_to answer.question
+
       end
     end
   end
 
   describe 'PATCH #best' do
+    describe 'Non authenticated user' do
+      before { patch :best, params: { id: answer, answer: { best: true }, question_id: question }, format: :js }
 
-    context 'user an author' do
-      before { login(author) }
-      before { patch :best, params: { id: answer, format: :js } }
+      scenario 'pick best answer' do
+        answer.reload
 
-      it 'assigns the request answer to @answer' do
-        expect(assigns(:answer)).to eq answer
+        expect(answer).to_not be_best
+      end
+    end
+
+    describe 'Authenticated user (non-author)' do
+      before do
+        sign_in(user)
+        patch :best, params: { id: answer, answer: { best: true }, question_id: question }, format: :js
       end
 
-      it 'render answer best' do
-        expect(response).to render_template :best
+      scenario 'pick best answer' do
+        answer.reload
+
+        expect(answer).to_not be_best
       end
+
+      scenario 're-renders question' do
+        expect(response).to redirect_to answer.question
+      end
+    end
+
+    scenario 'Authenticated author pick best answer' do
+      sign_in(author)
+
+      patch :best, params: { id: answer, answer: { best: true }, question_id: question }, format: :js
+      answer.reload
+
+      expect(answer).to be_best
     end
   end
 
