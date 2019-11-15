@@ -39,10 +39,11 @@ class QuestionsController < ApplicationController
   def destroy
     if current_user.author?(@question)
       @question.destroy
-      redirect_to questions_path, notice: 'Your question deleted sucessfully.'
-    else
-      redirect_to @question, notice: 'Only author can delete the question.'
+      #redirect_to questions_path, notice: 'Your question deleted sucessfully.'
+      flash[:notice] = 'Your question deleted sucessfully.'
+    #else
     end
+    redirect_to @question #, notice: 'Only author can delete the question.'
   end
 
   private

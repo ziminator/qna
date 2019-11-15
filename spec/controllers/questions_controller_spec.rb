@@ -135,37 +135,40 @@ RSpec.describe QuestionsController, type: :controller do
       it 'does not change question' do
         question.reload
 
-        expect(assigns(:question).to eq question.title
-        expect(assigns(:question).to eq question.body
+        expect(question.title).to eq question.title
+        expect(question.body).to eq question.body
       end
 
       it 're-renders edit view' do
-        #expect(response).to render_template :update
+        expect(response).to render_template :show
       end
     end
 
     context 'user is not an author' do
-      let!(:not_user) { create(:user) }
-
-      before { login(not_user) }
-      before { question }
+      let!(:not_author) { create(:user) }
+      let!(:question) { create(:question, user: not_author) }
 
       it 'update the question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
+        patch :update, params: { id: question, question: attributes_for(:question), format: :js }
         expect(assigns(:question)).to_not eq question
       end
     end
 
     context 'guests' do
       it 'can not update question' do
-        patch :update, params: { id: question, question: attributes_for(:question) }, format: :js
-        expect(response).to redirect_to user_session_path
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js }
+        question.reload
+
+        expect(question.title).to_not eq 'new title'
+        expect(question.body).to_not eq 'new body'
       end
     end
   end
 
   describe 'DELETE #destroy' do
     context 'user an author' do
+      #let!(:author) { create(:user) }
+      #let!(:question) { create(:question, user: author) }
       before { login(user) }
       before { question }
 
@@ -195,8 +198,8 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
 
-    context 'guest' do
-      it 'delete the question' do
+    context 'guests' do
+      it 'can not delete the question' do
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
         expect(response).to redirect_to question_path(question)
       end
