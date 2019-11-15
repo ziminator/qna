@@ -32,7 +32,7 @@ class QuestionsController < ApplicationController
     if @question.update(question_params)
       redirect_to @question
     else
-      render :edit
+      render :show
     end
   end
 
