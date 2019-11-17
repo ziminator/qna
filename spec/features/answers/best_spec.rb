@@ -39,8 +39,6 @@ feature 'Best answer', %q{
 
       within(".answer-#{third_answer.id}") do
         click_on 'Choose the best'
-
-        wait_for_ajax
       end
 
       expect(third_answer).to eq question.answers.first

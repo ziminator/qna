@@ -1,11 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:user) { create(:user) }
-  let(:author) { create(:user) }
-  let!(:not_author) { create (:user) }
-  let(:question) { create(:question, user: user) }
+  let!(:user) { create(:user) }
+  let!(:author) { create(:user) }
   let!(:answer) { create(:answer, question: question, user: author) }
+  let!(:question) { create(:question, user: author) }
 
   describe 'POST #create' do
     context 'with valid attributes' do
@@ -40,7 +39,6 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'guest cannot make answers' do
       it 'redirect to user sign in' do
-        post :create, params: { answer: attributes_for(:answer), question_id: question }
         expect { post :create, params: { answer: attributes_for(:answer),
                  question_id: question } }.not_to change(user.answers, :count)
         expect(response).to redirect_to user_session_path
@@ -52,16 +50,16 @@ RSpec.describe AnswersController, type: :controller do
     describe 'author updates answer' do
       before { login(author) }
 
-    context 'with valid attributes' do
-      it 'changes answer attributes' do
-        patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js
-        answer.reload
-        expect(answer.body).to eq 'New body'
-      end
-
-      it 'renders :update back to question' do
+      context 'with valid attributes' do
+        it 'changes answer attributes' do
           patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js
-          expect(response).to render_template :update
+          answer.reload
+          expect(answer.body).to eq 'New body'
+        end
+
+        it 'renders :update back to question' do
+           patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js
+          expect(response).to redirect_to answer.question
         end
       end
 
@@ -70,73 +68,87 @@ RSpec.describe AnswersController, type: :controller do
 
         it "doesn't changes answer attributes" do
           answer.reload
-          expect(answer.body).to eq "MyText"
+          expect(answer.body).to eq answer.body
         end
 
-        it 'renders :update' do
-          expect(response).to render_template :update
+        it 're-render view' do
+          expect(response).to render_template :show
         end
       end
     end
 
-    describe 'Non-author user updates question' do
-      before { login(user) }
+    describe 'Guest' do
       before { patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js }
 
-      it "does not changes question attributes" do
-        question.reload
+      context 'user try to update question' do
+        it "does not changes question attributes" do
+          question.reload
+          expect(question.body).to_not eq "New body"
+        end
 
-        expect(question.body).to_not eq "New body"
+        it 're-render edit' do
+          expect(response).to redirect_to answer.question
+        end
       end
 
-      it 're-render edit' do
-        expect(response).to redirect_to answer.question
+      context 'try to updates question' do
+        it "does not changes question attributes" do
+          question.reload
+          expect(question.body).to_not eq "New body"
+        end
 
+        it 're-render edit' do
+          expect(response).to redirect_to user_session_path
+        end
       end
     end
   end
 
-  describe 'PATCH #best' do
-    describe 'Non authenticated user' do
-      before { patch :best, params: { id: answer, answer: { best: true }, question_id: question }, format: :js }
+  describe 'POST #best' do
+    context 'Authenticated user as author' do
+      before { login(author) }
+      before { post :best, params: { id: answer }, format: :js }
 
-      scenario 'pick best answer' do
+      it 'select answer as best' do
         answer.reload
+        expect(answer).to be_best
+      end
 
-        expect(answer).to_not be_best
+      it 'render best template' do
+        expect(response).to render_template :best
       end
     end
 
-    describe 'Authenticated user (non-author)' do
-      before do
-        sign_in(user)
-        patch :best, params: { id: answer, answer: { best: true }, question_id: question }, format: :js
-      end
+    context 'Authenticated user as user' do
+      before { login(user) }
+      before { post :best, params: { id: answer }, format: :js }
 
-      scenario 'pick best answer' do
+      it 'can not select answer as best' do
         answer.reload
-
         expect(answer).to_not be_best
       end
 
-      scenario 're-renders question' do
-        expect(response).to redirect_to answer.question
+      it 'render best template' do
+        expect(response).to render_template :best
       end
     end
 
-    scenario 'Authenticated author pick best answer' do
-      sign_in(author)
+    context 'Non authenticated user' do
+      before { post :best, params: { id: answer }, format: :js }
+      it 'can not select answer as best' do
+        answer.reload
+        expect(answer).to_not be_best
+      end
 
-      patch :best, params: { id: answer, answer: { best: true }, question_id: question }, format: :js
-      answer.reload
-
-      expect(answer).to be_best
+      it 'render best template' do
+        expect(response).to redirect_to user_session_path
+      end
     end
   end
 
   describe 'DELETE #destroy' do
     context 'user an author' do
-      before { login(user) }
+      before { login(author) }
 
       it 'delete the answer' do
          expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
@@ -149,7 +161,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'user is not an author' do
-      before { login(not_author) }
+      before { login(user) }
 
       it 'delete answer' do
         expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)

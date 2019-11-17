@@ -14,7 +14,7 @@ RSpec.describe Answer, type: :model do
     let(:answer) { create(:answer, question: question, user: user) }
 
     before(:each) do
-      answer.best_answer!
+      answer.best!
       best_answer.reload
     end
 
@@ -23,7 +23,7 @@ RSpec.describe Answer, type: :model do
     end
 
     it 'should change the best answer' do
-      best_answer.best_answer!
+      best_answer.best!
       answer.reload
 
       expect(answer).to_not be_best
@@ -35,10 +35,8 @@ RSpec.describe Answer, type: :model do
     end
 
     it 'best answer is in list' do
-      best_answer.best_answer!
-      Answer.where(id: answer).each do |a|
-        expect(a.best).to eq false
-      end
+      best_answer.best!
+      expect(best_answer).to eq question.answers.first
     end
   end
 end

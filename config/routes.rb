@@ -3,7 +3,6 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-#  resources :questions, except: %i[edit update] do
   resources :questions do
     resources :answers, shallow: true, only: %i[create destroy update] do
       patch :best, on: :member

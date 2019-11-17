@@ -1,7 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:user) { create(:user) }
+  let!(:user) { create(:user) }
+  let!(:author) { create(:user) }
+  let!(:not_author) { create(:user) }
   let(:question) { create(:question, user: user) }
 
   describe 'GET #index' do
@@ -97,13 +99,15 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'guests' do
       it 'can not create question' do
-        post :create, params: { question: attributes_for(:question) }
+        expect { post :create, params: { question: attributes_for(:question) } }.to_not change(Question, :count)
         expect(response).to redirect_to user_session_path
       end
     end
   end
 
   describe 'PATCH #update' do
+    let!(:not_author) { create(:user) }
+    let!(:question) { create(:question, user: not_author) }
 
     context 'with valid attributes' do
       before { login(user) }
@@ -145,17 +149,17 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'user is not an author' do
-      let!(:not_author) { create(:user) }
-      let!(:question) { create(:question, user: not_author) }
+      before { login(not_author) }
 
-      it 'update the question' do
-        patch :update, params: { id: question, question: attributes_for(:question), format: :js }
-        expect(assigns(:question)).to_not eq question
+      it 'can not update the question' do
+        patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js }
+        expect(question.title).to_not eq 'new title'
+        expect(question.body).to_not eq 'new body'
       end
     end
 
     context 'guests' do
-      it 'can not update question' do
+      it 'can not update the question' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js }
         question.reload
 
@@ -166,33 +170,29 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    context 'user an author' do
-      #let!(:author) { create(:user) }
-      #let!(:question) { create(:question, user: author) }
-      before { login(user) }
-      before { question }
+    let!(:question) { create(:question, user: author) }
+
+    context 'author can delete the question' do
+      before { login(author) }
 
       it 'delete the question' do
         expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
       end
 
-      it 'redirects to index' do
+      it 'redirects to #index' do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to questions_path
       end
     end
 
-    context 'user is not an author' do
-      let!(:not_user) { create(:user) }
+    context 'non-author can not delete the question' do
+      before { login(user) }
 
-      before { login(not_user) }
-      before { question }
-
-      it 'delete the question' do
+      it 'can not delete the question' do
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
       end
 
-      it 'redirects to question show' do
+      it 'redirect to questions' do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to question_path(question)
       end
@@ -201,7 +201,7 @@ RSpec.describe QuestionsController, type: :controller do
     context 'guests' do
       it 'can not delete the question' do
         expect { delete :destroy, params: { id: question } }.to_not change(Question, :count)
-        expect(response).to redirect_to question_path(question)
+        expect(response).to redirect_to user_session_path
       end
     end
   end
