@@ -8,21 +8,20 @@ div class = "answer-#{answer.id}"
   - else
     p= answer.body
 
-  - if answer.persisted?
-    - if current_user&.author?(answer)
-      p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-      p= link_to 'Remove answer', answer_path(answer),
-        class: 'delete-answer-link',
-        remote: true,
-        method: :delete,
-        data: { answer_id: answer.id }
+  - if current_user&.author?(answer)
+    p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+    p= link_to 'Remove answer', answer_path(answer),
+      class: 'delete-answer-link',
+      remote: true,
+      method: :delete,
+      data: { answer_id: answer.id }
 
-    - if current_user&.author?(answer.question) && !answer.best?
-      p= link_to 'Choose the best', best_answer_path(answer),
-        class: 'best-answer-link',
-        remote: true,
-        method: :patch,
-        data: { answer_id: answer.id }
+  - if current_user&.author?(answer.question) && !answer.best?
+    p= link_to 'Choose the best', best_answer_path(answer),
+      class: 'best-answer-link',
+      remote: true,
+      method: :patch,
+      data: { answer_id: answer.id }
 
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
     = render 'shared/errors', resource: answer

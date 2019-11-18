@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: :create
   before_action :find_answer, only: %i[edit update destroy best]
+  before_action :check_authorship, only: %i[update destroy best]
 
   def edit
 
@@ -19,7 +20,7 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if current_user.author?(@answer)
+    if @author
       if @answer.update(answer_params)
         redirect_to @answer.question, notice: 'Your answer sucessfully updated.'
       else
@@ -31,7 +32,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author?(@answer)
+    if @author
       @answer.destroy
       flash[:notice] = 'Your answer deleted sucessfully!'
     end
@@ -39,10 +40,14 @@ class AnswersController < ApplicationController
   end
 
   def best
-    @answer.best! if current_user.author?(@answer.question)
+    @answer.best! if @author
   end
 
   private
+
+  def check_authorship
+    @author = current_user.author?(@answer)
+  end
 
   def find_question
     @question = Question.find(params[:question_id])

@@ -8,7 +8,8 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid attributes' do
-      before { login(user) }
+      before { login(author) }
+
       it 'saves new answer in the database with assign user as author' do
         expect { post :create, params: { answer: attributes_for(:answer),
                  question_id: question } }.to change(user.answers, :count).by(1)
@@ -26,7 +27,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'with invalid attributes' do
-      before { login(user) }
+      before { login(author) }
       it "doesn't save a new answer in database" do
         expect { post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question } }.to_not change(Answer, :count)
       end
@@ -47,18 +48,17 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    describe 'author updates answer' do
+    describe 'Updates answer' do
       before { login(author) }
 
       context 'with valid attributes' do
-        it 'changes answer attributes' do
-          patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js
+        before { patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js }
+        it 'author changes answer attributes' do
           answer.reload
           expect(answer.body).to eq 'New body'
         end
 
         it 'renders :update back to question' do
-           patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js
           expect(response).to redirect_to answer.question
         end
       end
@@ -75,6 +75,20 @@ RSpec.describe AnswersController, type: :controller do
           expect(response).to render_template :show
         end
       end
+
+      context 'non author' do
+        before { login(user) }
+        before { patch :update, params: { id: answer, answer: { body: "New body" }, question_id: question }, format: :js }
+
+        it 'changes answer attributes' do
+          answer.reload
+          expect(answer.body).to_not eq 'New body'
+        end
+
+        it 'renders :update back to question' do
+          expect(response).to redirect_to answer.question
+        end
+      end
     end
 
     describe 'Guest' do
@@ -88,17 +102,6 @@ RSpec.describe AnswersController, type: :controller do
 
         it 're-render edit' do
           expect(response).to redirect_to answer.question
-        end
-      end
-
-      context 'try to updates question' do
-        it "does not changes question attributes" do
-          question.reload
-          expect(question.body).to_not eq "New body"
-        end
-
-        it 're-render edit' do
-          expect(response).to redirect_to user_session_path
         end
       end
     end

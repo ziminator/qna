@@ -12,8 +12,13 @@ feature 'User can edit his answer', %q{
   given!(:answer) { create(:answer, question: question, user: user) }
 
   scenario "Guest cannot edit user's answer", js: true do
-    visit question_path(question)
     expect(page).to have_no_link 'Edit question'
+  end
+
+  scenario 'Non author can not edit answer' do
+    visit question_path(question)
+    sign_in guest
+    expect(page).to have_no_link 'Edit'
   end
 
   describe 'Authenticated user' do
@@ -23,8 +28,6 @@ feature 'User can edit his answer', %q{
     end
 
     scenario "Edit his answer", js: true do
-      answer = create(:answer, user: user, question: question)
-
       click_on 'Edit'
 
       within '.answers' do
