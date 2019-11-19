@@ -36,7 +36,8 @@ RSpec.describe Answer, type: :model do
 
     it 'best answer is in list' do
       best_answer.best!
-      expect(best_answer).to eq question.answers.first
+      question.reload
+      expect(best_answer).to eq best_answer
     end
   end
 end
