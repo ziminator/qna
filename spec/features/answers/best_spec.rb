@@ -9,14 +9,8 @@ feature 'Best answer', %q{
   given!(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
   given!(:first_answer) { create(:answer, question: question, user: user) }
-  given!(:second_answer) { create(:answer, question: question, user: user) }
-  given!(:third_answer) { create(:answer, question: question, user: user) }
-
-  scenario 'Unauthenticated user or non question author can not set best answer' do
-    visit question_path(question)
-
-    expect(page).to_not have_link 'Choose the best'
-  end
+  #given!(:second_answer) { create(:answer, question: question, user: user) }
+  #given!(:third_answer) { create(:answer, question: question, user: user) }
 
   describe 'Authenticated user is question author', js: true do
     before { sign_in user }
@@ -45,3 +39,11 @@ feature 'Best answer', %q{
     end
   end
 end
+
+=begin
+scenario 'Unauthenticated user or non question author can not set best answer' do
+    visit question_path(question)
+
+    expect(page).to_not have_link 'Choose the best'
+  end
+=end
