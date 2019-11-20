@@ -1,10 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let!(:user) { create(:user) }
-  let!(:author) { create(:user) }
-  let!(:not_author) { create(:user) }
-  let(:question) { create(:question, user: user) }
+  let(:user) { create(:user) }
+  let(:author) { create(:user) }
+  let(:question) { create(:question, user: author) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3, user: user) }
@@ -20,7 +19,6 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
-
     before { get :show, params: { id: question } }
 
     it 'assigns the requested question to @question' do
@@ -106,11 +104,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let!(:not_author) { create(:user) }
-    let!(:question) { create(:question, user: not_author) }
-
     context 'with valid attributes' do
-      before { login(user) }
+      before { login(author) }
 
       it 'assigns the requested question to @question' do
         patch :update, params: { id: question, question: attributes_for(:question), format: :js }
@@ -149,13 +144,16 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'user is not an author' do
-      before { login(not_author) }
+      before { login(user) }
 
       it 'can not update the question' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' }, format: :js }
+        question.reload
+
         expect(question.title).to_not eq 'new title'
         expect(question.body).to_not eq 'new body'
-        expect(response).to redirect_to question
+
+        expect(response).to_not redirect_to question
       end
     end
 
@@ -171,6 +169,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
 
   describe 'DELETE #destroy' do
     let!(:question) { create(:question, user: author) }

@@ -10,7 +10,7 @@ RSpec.describe Answer, type: :model do
   describe '#best!' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
-    let!(:best_answer) { create(:answer, question: question, user: user, best: true) }
+    let!(:best_answer) { create(:answer, question: question, user: user) }
     let(:answer) { create(:answer, question: question, user: user) }
 
     before(:each) do
@@ -37,7 +37,7 @@ RSpec.describe Answer, type: :model do
     it 'best answer is in list' do
       best_answer.best!
       question.reload
-      expect(best_answer).to eq best_answer
+      expect(question.answers.best).to eq best_answer
     end
   end
 end

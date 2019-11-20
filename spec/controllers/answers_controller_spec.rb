@@ -12,7 +12,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'saves new answer in the database with assign user as author' do
         expect { post :create, params: { answer: attributes_for(:answer),
-                 question_id: question } }.to change(user.answers, :count).by(1)
+                 question_id: question } }.to change(question.answers, :count).by(1)
       end
 
       it 'saves the association to question' do
@@ -96,8 +96,8 @@ RSpec.describe AnswersController, type: :controller do
 
       context 'user try to update question' do
         it "does not changes question attributes" do
-          question.reload
-          expect(question.body).to_not eq "New body"
+          answer.reload
+          expect(answer.body).to_not eq "New body"
         end
 
         it 're-render edit' do

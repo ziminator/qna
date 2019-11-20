@@ -40,7 +40,7 @@ class AnswersController < ApplicationController
   end
 
   def best
-    @answer.best! if @author
+    @answer.best! if current_user.author?(@answer.question)
   end
 
   private

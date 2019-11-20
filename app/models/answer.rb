@@ -8,10 +8,8 @@ class Answer < ApplicationRecord
   scope :best, -> { where(best: true) }
 
   def best!
-    best_answer = question.answers.find_by(best: true)
-
     transaction do
-      best_answer.update!(best: false) if best_answer
+      question.answers.best.update_all(best: false)
       update!(best: true)
     end
   end
