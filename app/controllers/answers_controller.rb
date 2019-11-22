@@ -22,12 +22,14 @@ class AnswersController < ApplicationController
   def update
     if check_authorship!
       if @answer.update(answer_params)
-        redirect_answer, notice: 'Your answer sucessfully updated.'
+        redirect_answer
+        flash[:notice] = 'Your answer sucessfully updated.'
       else
         render 'questions/show'
       end
     else
-      redirect_answer, notice: 'You are not an author of this question!'
+      redirect_answer
+      flash[:notice] = 'You are not an author of this question!'
     end
   end
 
