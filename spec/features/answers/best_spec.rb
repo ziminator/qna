@@ -8,8 +8,6 @@ feature 'Best answer', %q{
 
   given!(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
-  #given!(:first_answer) { create(:answer, question: question, user: user) }
-  #given!(:second_answer) { create(:answer, question: question, user: user) }
   given!(:answers) { create_list(:answer, 5, question: question, user: user) }
 
   scenario 'Unauthenticated user or non question author can not set best answer' do
