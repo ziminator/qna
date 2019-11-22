@@ -2,7 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: :create
   before_action :find_answer, only: %i[edit update destroy best]
-  before_action :check_authorship, only: %i[update destroy best]
+  before_action :check_authorship!, only: %i[update destroy best]
 
   def edit
 
@@ -20,23 +20,23 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @author
+    if check_authorship!
       if @answer.update(answer_params)
-        redirect_to @answer.question, notice: 'Your answer sucessfully updated.'
+        redirect_answer, notice: 'Your answer sucessfully updated.'
       else
         render 'questions/show'
       end
     else
-      redirect_to @answer.question, notice: 'You are not an author of this question!'
+      redirect_answer, notice: 'You are not an author of this question!'
     end
   end
 
   def destroy
-    if @author
+    if check_authorship!
       @answer.destroy
       flash[:notice] = 'Your answer deleted sucessfully!'
     end
-    redirect_to @answer.question
+    redirect_answer
   end
 
   def best
@@ -44,10 +44,6 @@ class AnswersController < ApplicationController
   end
 
   private
-
-  def check_authorship
-    @author = current_user.author?(@answer)
-  end
 
   def find_question
     @question = Question.find(params[:question_id])
@@ -59,5 +55,13 @@ class AnswersController < ApplicationController
 
   def find_answer
     @answer = Answer.find(params[:id])
+  end
+
+  def check_authorship!
+    current_user.author?(@answer)
+  end
+
+  def redirect_answer
+    redirect_to @answer.question
   end
 end

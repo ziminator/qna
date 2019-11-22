@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :find_question, only: %i[show edit update destroy]
-  before_action :check_authorship, only: %i[update destroy]
+  before_action :check_authorship!, only: %i[update destroy]
 
   def index
     @questions = Question.all
@@ -30,20 +30,20 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @author
+    if check_authorship!
       @question.update(question_params)
-      redirect_to @question
+      redirect_question
     else
       render :show
     end
   end
 
   def destroy
-    if @author
+    if check_authorship!
       @question.destroy
       flash[:notice] = 'Your question deleted sucessfully.'
     end
-    redirect_to @question
+    redirect_question
   end
 
   private
@@ -56,7 +56,11 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body)
   end
 
-  def check_authorship
-    @author = current_user.author?(@question)
+  def check_authorship!
+    current_user.author?(@question)
+  end
+
+  def redirect_question
+    redirect_to @question
   end
 end
