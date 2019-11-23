@@ -10,25 +10,20 @@ RSpec.describe Answer, type: :model do
   describe '#best!' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
-    let!(:best_answer) { create(:answer, question: question, user: user) }
-    let!(:answers) { create_list(:answer, 5, question: question, user: user) }
-    let(:answer) { create(:answer, question: question, user: user) }
+    let!(:answers) { create_list(:answer, 3, question: question, user: user) }
 
     before(:each) do
-      answer.best!
-      best_answer.reload
+      answers[0].best!
+      answers[0].reload
     end
 
     it 'should make answer the best' do
-      expect(answer).to be_best
+      expect(answers[0]).to be_best
     end
 
     it 'should change the best answer' do
-      best_answer.best!
-      answer.reload
-
-      expect(answer).to_not be_best
-      expect(best_answer).to be_best
+      expect(answers[1]).to_not be_best
+      expect(answers[0]).to be_best
     end
 
     it 'only one answer can be the best' do
@@ -39,7 +34,7 @@ RSpec.describe Answer, type: :model do
       third_answer = answers.third
       third_answer.best!
       expect(Answer.best.first).to eq third_answer
-      expect(question.answers).to eq Answer.all
+      expect(question.answers).to eq([answers.third, answers.first, answers.second])
     end
   end
 end

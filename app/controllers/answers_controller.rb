@@ -2,7 +2,6 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question, only: :create
   before_action :find_answer, only: %i[edit update destroy best]
-  before_action :check_authorship!, only: %i[update destroy best]
 
   def edit
 
