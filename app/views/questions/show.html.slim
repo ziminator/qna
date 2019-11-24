@@ -1,18 +1,22 @@
-.question
-  .question-title = @question.title
-  .question-body = @question.body
-  .question-errors
+h1= @question.title
+p= @question.body
 
-  - if @question.files.attached?
-    - @question.files.each do |file|
-      p= link_to file.filename.to_s, url_for(file)
-
-  - if current_user&.author?(@question)
-    p= link_to 'Edit question', '#', class: 'edit-question-link'
-    p= link_to 'Remove question', question_path(@question), method: :delete
-    = render 'form'
+- if @question.files.attached?
+  - @question.files.each do |file|
+    p= link_to file.filename.to_s, url_for(file)
 
 .answers
   = render @question.answers
 
-= render 'answers/form'
+.answer-errors
+  = render 'shared/errors', resource: @answer
+
+  - if current_user&.author?(@question)
+    = link_to 'Edit question |', '#', class: 'edit-question-link'
+    = link_to ' Remove question', question_path(@question), method: :delete
+    = render 'form'
+
+
+  = render 'answers/form'
+
+= link_to 'Back', questions_path, remote: true
