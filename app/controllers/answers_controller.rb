@@ -44,6 +44,14 @@ class AnswersController < ApplicationController
     @answer.best! if current_user.author?(@answer.question)
   end
 
+  def destroy
+    if current_user.author?(@answer)
+      @answer.destroy
+      flash[:notice] = 'Your answer deleted sucessfully!'
+    end
+    redirect_to @answer.question
+  end
+
   private
 
   def find_question

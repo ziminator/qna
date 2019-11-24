@@ -15,8 +15,11 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'slim-rails'
 gem 'devise'
+<<<<<<< HEAD
 gem "twitter-bootstrap-rails"
 gem 'jquery-rails'
+=======
+>>>>>>> 60ad065005429f05960b2c8e7f05433ccf0222ce
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

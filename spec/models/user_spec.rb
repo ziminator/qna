@@ -10,7 +10,7 @@ RSpec.describe User, type: :model do
   let!(:any_user) { create(:user) }
 
   describe 'Author question?' do
-    let(:question) { create(:question, user: user) }
+  let(:question) { create(:question, user: user) }
 
     it 'current user is author' do
       expect(user).to be_author(question)
