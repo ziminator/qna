@@ -1,6 +1,11 @@
 = form_with model: [@question, @answer], html: { id: "create-answer"} do |f|
   .answer-errors
     = render 'shared/errors', resource: @answer
+  p
     = f.label :body
     = f.text_area :body
-    = f.submit 'Answer'
+
+  p
+    = f.label :files
+    = f.file_field :files, multiple: true
+  p= f.submit 'Answer'
