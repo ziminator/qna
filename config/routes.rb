@@ -5,7 +5,9 @@ Rails.application.routes.draw do
 
   resources :questions do
     resources :answers, shallow: true, only: %i[create destroy update] do
-      patch :best, on: :member
+        patch :best, on: :member
     end
   end
+
+  resources :attachments, only: :destroy
 end
