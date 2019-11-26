@@ -10,18 +10,28 @@ div class = "answer-#{answer.id}"
 
   - if answer.files.attached?
     - answer.files.each do |file|
-      p= link_to file.filename.to_s, url_for(file)
+      div class = "attachment-#{file.id}"
+      = link_to file.filename.to_s, url_for(file)
+      - if current_user&.author?(answer)
+      p
+        = link_to 'Remove attachment', attachment_path(file),
+                class: 'delete-attachment-link',
+                remote: true,
+                method: :delete
 
   - if current_user&.author?(answer)
-    p= link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-    p= link_to 'Remove answer', answer_path(answer),
+  p
+    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+  p
+    = link_to 'Remove answer', answer_path(answer),
       class: 'delete-answer-link',
       remote: true,
       method: :delete,
       data: { answer_id: answer.id }
 
   - if current_user&.author?(answer.question) && !answer.best?
-    p= link_to 'Choose the best', best_answer_path(answer),
+    p
+      = link_to 'Choose the best', best_answer_path(answer),
       class: 'best-answer-link',
       remote: true,
       method: :patch,
@@ -29,6 +39,11 @@ div class = "answer-#{answer.id}"
 
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
     = render 'shared/errors', resource: answer
-    = f.label :body, 'Your answer'
-    = f.text_area :body
-    = f.submit 'Save'
+    p
+      = f.label :body, 'Your answer'
+      = f.text_area :body
+    p
+      = f.label :files
+      = f.file_field :files, multiple: true
+    p
+      = f.submit 'Save'
