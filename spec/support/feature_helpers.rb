@@ -5,4 +5,8 @@ module FeatureHelpers
     fill_in 'Password', with: user.password
     click_button 'Log in'
   end
+
+  def add_file_to(model)
+    model.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'spec_helper.rb')
+  end
 end

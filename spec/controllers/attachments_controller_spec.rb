@@ -7,8 +7,8 @@ RSpec.describe AttachmentsController, type: :controller do
   let!(:answer) { create(:answer, question: question, user: author) }
 
   before do
-    question.files.attach(io: File.open("#{Rails.root}/spec/rails_helper.rb"), filename: 'rails_helper.rb')
-    answer.files.attach(io: File.open("#{Rails.root}/spec/spec_helper.rb"), filename: 'spec_helper.rb')
+    add_file_to(question)
+    add_file_to(answer)
   end
 
   describe 'DELETE #destroy by' do
