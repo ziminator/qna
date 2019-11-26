@@ -1,1 +1,23 @@
-p= link_to question.title, question_path(question)
+.question-title
+  h1= @question.title
+.question-body
+  p= @question.body
+
+- if @question.files.attached?
+  - @question.files.each do |file|
+    div class = "attachment-#{file.id}"
+    p
+      = link_to file.filename.to_s, url_for(file)
+      - if current_user&.author?(question)
+      p
+        = link_to 'Remove attachment', attachment_path(file),
+          class: 'delete-attachment-link',
+          remote: true,
+          method: :delete
+
+.question-errors
+
+- if current_user&.author?(question)
+  = link_to 'Edit question |', '#', class: 'edit-question-link'
+  = link_to ' Remove question', question_path(question), method: :delete
+  = render 'form'
