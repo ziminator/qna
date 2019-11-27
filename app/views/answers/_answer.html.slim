@@ -8,16 +8,7 @@ div class = "answer-#{answer.id}"
   - else
     p= answer.body
 
-  - if answer.files.attached?
-    - answer.files.each do |file|
-      div class = "attachment-#{file.id}"
-      = link_to file.filename.to_s, url_for(file)
-      - if current_user&.author?(answer)
-      p
-        = link_to 'Remove attachment', attachment_path(file),
-                class: 'delete-attachment-link',
-                remote: true,
-                method: :delete
+  = render 'shared/attachment', resource: answer
 
   - if current_user&.author?(answer)
   p
