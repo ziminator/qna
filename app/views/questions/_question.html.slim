@@ -3,17 +3,7 @@
 .question-body
   p= @question.body
 
-- if @question.files.attached?
-  - @question.files.each do |file|
-    div class = "attachment-#{file.id}"
-    p
-      = link_to file.filename.to_s, url_for(file)
-      - if current_user&.author?(question)
-      p
-        = link_to 'Remove attachment', attachment_path(file),
-          class: 'delete-attachment-link',
-          remote: true,
-          method: :delete
+= render 'shared/attachment', resource: question
 
 .question-errors
 

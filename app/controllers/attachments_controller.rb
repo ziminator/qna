@@ -1,18 +1,12 @@
 class AttachmentsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_attachment, only: %i[destroy]
 
   def destroy
-    if current_user.author?(find_attachment.record)
+    @attachment = ActiveStorage::Attachment.find(params[:id])
+    if current_user.author?(@attachment.record)
       @attachment.purge
     else
-      redirect_to find_attachment.record
+      redirect_to @attachment.record
     end
-  end
-
-  private
-
-  def find_attachment
-    @attachment = ActiveStorage::Attachment.find(params[:id])
   end
 end
