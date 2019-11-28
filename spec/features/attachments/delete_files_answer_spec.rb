@@ -14,8 +14,12 @@ feature 'User can delete files', %q{
       sign_in(author)
       add_file_to(answer)
       visit question_path(question)
+
       fill_in 'Body', with: 'answer body'
-      attach_file 'File', ["#{Rails.root.join('spec/rails_helper.rb')}", "#{Rails.root.join('spec/rails_helper.rb').to_s}"]
+      #attach_file 'File', ["#{Rails.root.join('spec/rails_helper.rb')}", "#{Rails.root.join('spec/rails_helper.rb').to_s}"]
+
+      attributes_for(:attach_file)
+
       click_on 'Answer'
     end
 
