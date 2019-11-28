@@ -24,6 +24,7 @@ feature 'User can delete files', %q{
     end
 
     scenario 'author of answer can delete the attachment' do
+      #fill_in 'Body', with: 'answer body'
       within ".attachment-#{answer.files.first.id}" do
         expect(page).to have_link 'rails_helper.rb'
         click_on 'Remove attachment'
