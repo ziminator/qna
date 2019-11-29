@@ -17,16 +17,17 @@ feature 'User can delete files', %q{
       visit question_path(question)
 
       #save_and_open_page
-      fill_in 'Body', with: 'answer body'
+      #fill_in 'Body', with: 'answer body'
       #attach_file 'File', ["#{Rails.root.join('spec/rails_helper.rb')}", "#{Rails.root.join('spec/rails_helper.rb').to_s}"]
 
       #attributes_for(:attach_file)
 
-      click_on 'Answer'
+      #click_on 'Answer'
     end
 
     scenario 'author of answer can delete the attachment' do
-      #fill_in 'Body', with: 'answer body'
+      fill_in 'Body', with: 'answer body'
+      click_on 'Answer'
       within ".attachment-#{answer.files.first.id}" do
         expect(page).to have_link 'rails_helper.rb'
         click_on 'Remove attachment'
