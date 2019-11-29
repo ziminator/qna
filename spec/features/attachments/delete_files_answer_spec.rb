@@ -8,6 +8,7 @@ feature 'User can delete files', %q{
   given(:author) { create(:user) }
   given(:question) { create(:question, user: author) }
   given(:answer) { create(:answer, question: question, user: author) }
+  given(:attach) { create(:attach) }
 
   describe 'Authenticated user' do
     before do
@@ -15,10 +16,11 @@ feature 'User can delete files', %q{
       add_file_to(answer)
       visit question_path(question)
 
+      #save_and_open_page
       fill_in 'Body', with: 'answer body'
       #attach_file 'File', ["#{Rails.root.join('spec/rails_helper.rb')}", "#{Rails.root.join('spec/rails_helper.rb').to_s}"]
 
-      attributes_for(:attach_file)
+      #attributes_for(:attach_file)
 
       click_on 'Answer'
     end
