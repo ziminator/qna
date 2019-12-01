@@ -8,26 +8,19 @@ feature 'User can delete files', %q{
   given(:author) { create(:user) }
   given(:question) { create(:question, user: author) }
   given(:answer) { create(:answer, question: question, user: author) }
-  given(:attach) { create(:attach) }
 
   describe 'Authenticated user' do
-    before do
+    background do
       sign_in(author)
       add_file_to(answer)
       visit question_path(question)
-
-      #save_and_open_page
-      #fill_in 'Body', with: 'answer body'
-      #attach_file 'File', ["#{Rails.root.join('spec/rails_helper.rb')}", "#{Rails.root.join('spec/rails_helper.rb').to_s}"]
-
-      #attributes_for(:attach_file)
-
-      #click_on 'Answer'
     end
 
     scenario 'author of answer can delete the attachment' do
-      fill_in 'Body', with: 'answer body'
+      fill_in 'Answer body', with: 'Just answer'
+      attach_file 'Answer files', answer.files.first.id
       click_on 'Answer'
+
       within ".attachment-#{answer.files.first.id}" do
         expect(page).to have_link 'rails_helper.rb'
         click_on 'Remove attachment'
@@ -40,6 +33,8 @@ feature 'User can delete files', %q{
 
     scenario 'non author of answer try to delete the attachment' do
       sign_in(user)
+      fill_in 'Answer body', with: 'Just answer'
+      attach_file 'Answer files', answer.files.first.id
       within ".attachment-#{answer.files.first.id}" do
         expect(page).to_not have_link 'Remove attachment'
       end
