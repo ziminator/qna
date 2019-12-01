@@ -6,52 +6,43 @@ RSpec.describe AttachmentsController, type: :controller do
   let!(:question) { create(:question, user: author) }
   let!(:answer) { create(:answer, question: question, user: author) }
 
-  describe 'DELETE #destroy by' do
-    context 'user an author' do
+  describe 'DELETE #destroy' do
+    context 'question' do
       before do
-        login(author)
+        add_file_to(question)
       end
 
-      it 'can delete question attachment' do
-        add_file_to(question)
-
+      it 'author can delete question attachment' do
+        login(author)
         expect { delete :destroy, params: { id: question.files.first }, format: :js }.to change(question.files, :count).by(-1)
       end
 
-      it 'can delete answer attachment' do
-        add_file_to(answer)
+      it 'user can not delete question attachment' do
+        login(user)
+        expect { delete :destroy, params: { id: question.files.first }, format: :js }.to_not change(question.files, :count)
+      end
 
+      it 'guest can not delete question attachment' do
+        expect { delete :destroy, params: { id: question.files.first }, format: :js }.to_not change(question.files, :count)
+      end
+    end
+
+    context 'answer' do
+      before do
+        add_file_to(answer)
+      end
+
+      it 'author can delete answer attachment' do
+        login(author)
         expect { delete :destroy, params: { id: answer.files.first }, format: :js }.to change(answer.files, :count).by(-1)
       end
-    end
 
-    context 'user is not an author' do
-      before do
+      it 'user can not delete answer attachment' do
         login(user)
-      end
-
-      it 'try to delete question attachment' do
-        add_file_to(question)
-
-        expect { delete :destroy, params: { id: question.files.first }, format: :js }.to_not change(question.files, :count)
-      end
-
-      it 'try to delete answer attachment' do
-        add_file_to(answer)
-
         expect { delete :destroy, params: { id: answer.files.first }, format: :js }.to_not change(answer.files, :count)
       end
-    end
-  end
 
-  describe 'DELETE #destroy by' do
-    context 'guest' do
-
-      it 'try to delete question and answer' do
-        add_file_to(question)
-        add_file_to(answer)
-
-        expect { delete :destroy, params: { id: question.files.first }, format: :js }.to_not change(question.files, :count)
+      it 'guest can not delete answer attachment' do
         expect { delete :destroy, params: { id: answer.files.first }, format: :js }.to_not change(answer.files, :count)
       end
     end

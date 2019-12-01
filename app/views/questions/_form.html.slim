@@ -1,13 +1,13 @@
 = form_with model: @question, class: 'hidden', html: { id: "edit-question-form" } do |f|
   = render 'shared/errors', resource: @question
   p
-    = f.label :title, 'Your title'
+    = f.label :title, 'Question title'
     = f.text_field :title
   p
-    = f.label :body, 'Your body'
+    = f.label :body, 'Question body'
     = f.text_area :body
   p
-    = f.label :files
-    = f.file_field :files, multiple: true
+    = f.label :files, 'Question files'
+    = f.file_field :files, multiple: true, direct_upload: true
   p
     = f.submit 'Save'
