@@ -1,6 +1,12 @@
 .question
   = render @question
 
+.links
+  p Links:
+  ul
+    - @question.links.each do |link|
+      li= link_to link.name, Link.url
+
 .answers
   = render @question.answers
 
