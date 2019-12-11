@@ -8,6 +8,12 @@ div class = "answer-#{answer.id}"
   - else
     p= answer.body
 
+  .links
+  p Links:
+  ul
+    - @answer.links.each do |link|
+      li= link_to link.name, Link.url
+
   = render 'shared/attachment', resource: answer
 
   - if current_user&.author?(answer)
