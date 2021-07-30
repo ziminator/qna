@@ -1,0 +1,31 @@
+.header.navbar.navbar-fixed-top.navbar-dark.bg-dark
+  .navbar-brand.justify-content-start
+    = link_to 'Simple Question/Answer Application', root_path, class: 'logo'
+  ul.nav.justify-content-end
+    - if user_signed_in?
+      li.nav-item.dropdown
+        .nav-link.dropdown-toggle  aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" role="button"
+          = link_to 'Account', '#'
+          .dropdown-menu
+            .row
+              .col
+                ul.mega-list
+                  li.highlight
+                    = link_to 'Profile', '#'
+              .col
+                ul.mega-list
+                  li.highlight
+                    = link_to 'Profile', '#'
+              .col
+                ul.mega-list
+                  li.highlight
+                    = link_to 'Profile', '#'
+      li.nav-item.nav-link
+        = link_to 'Awards', awards_path
+      li.nav-item.nav-link
+        = link_to 'Logout', destroy_user_session_path, method: :delete
+    - else
+      li.nav-item.nav-link
+        = link_to 'Register', new_user_registration_path
+      li.nav-item.nav-link
+        = link_to 'Login', new_user_session_path

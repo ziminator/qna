@@ -1,22 +1,20 @@
 class Answer < ApplicationRecord
-  belongs_to :question
+  has_many_attached :files, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
+  belongs_to :question
+  belongs_to :author, class_name: 'User'
 
   accepts_nested_attributes_for :links, reject_if: :all_blank
 
-  belongs_to :user
-
-  has_many_attached :files
-
   validates :body, presence: true
 
-  default_scope -> { order('best DESC, created_at') }
-  scope :best, -> { where(best: true) }
+  scope :sort_by_best, -> { order(best: :desc) }
 
-  def best!
-    transaction do
-      question.answers.best.update_all(best: false)
+  def set_the_best
+    self.transaction do
+      question.answers.update_all(best: false)
       update!(best: true)
+      question.award&.update!(user: author)
     end
   end
 end

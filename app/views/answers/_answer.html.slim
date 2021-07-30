@@ -1,46 +1,19 @@
-div class = "answer-#{answer.id}"
-  div class = "answer-#{answer.id}-errors"
+. class="answer-#{answer.id}"
+  .answer-update-errors
+  p = answer.body
+  br
+  .files
+    = render 'partials/files_block', resource: answer
+  br
+  .answer-links
+    = render 'partials/links_block', resource: answer
 
-  - if answer.best?
-    .best_answer
-      h3= 'Best answer:'
-      p= answer.body
-  - else
-    p= answer.body
+  - if current_user&.author_of?(answer.question)
+    = link_to 'Set the Best', select_best_answer_path(answer), method: :patch, remote: true, class: 'best-answer'
+    '  |
+  - if current_user&.author_of?(answer) && answer.persisted?
+    = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true
+    '  |
+    = link_to 'Edit', '#', class: 'edit-answer-link', data: {answer_id: answer.id}, remote: true
 
-  .links
-  p Links:
-  ul
-    - @answer.links.each do |link|
-      li= link_to link.name, Link.url
-
-  = render 'shared/attachment', resource: answer
-
-  - if current_user&.author?(answer)
-  p
-    = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
-  p
-    = link_to 'Remove answer', answer_path(answer),
-      class: 'delete-answer-link',
-      remote: true,
-      method: :delete,
-      data: { answer_id: answer.id }
-
-  - if current_user&.author?(answer.question) && !answer.best?
-    p
-      = link_to 'Choose the best', best_answer_path(answer),
-      class: 'best-answer-link',
-      remote: true,
-      method: :patch,
-      data: { answer_id: answer.id }
-
-  = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-    = render 'shared/errors', resource: answer
-    p
-      = f.label :body, 'Your answer'
-      = f.text_area :body
-    p
-      = f.label :files
-      = f.file_field :files, multiple: true, direct_upload: true
-    p
-      = f.submit 'Save'
+    = render partial: 'answers/edit_form', locals: { answer: answer }

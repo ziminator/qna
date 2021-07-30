@@ -1,3 +1,2 @@
-$('.flash').html('');
-$('.flash').append('<%= flash_messages %>');
-$('.answer-<%= @answer.id %>').remove();
+$('.flash').html('<%= render 'shared/flash' %>').delay(2000).fadeOut('slow');
+$('.answer-<%= answer.id %>').remove();

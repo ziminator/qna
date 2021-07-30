@@ -2,45 +2,49 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   it { should belong_to :question }
+  it { should belong_to :author }
   it { should have_many(:links).dependent(:destroy) }
-  it { should belong_to :user }
-  it { should have_db_index :question_id }
-  it { should have_db_index :user_id }
+
   it { should validate_presence_of :body }
+
   it { should accept_nested_attributes_for :links }
 
-  it 'have many attached files' do
+  it 'has many attached file' do
     expect(Answer.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
 
-  describe '#best!' do
-    let(:user) { create(:user) }
-    let(:question) { create(:question, user: user) }
-    let!(:answers) { create_list(:answer, 3, question: question, user: user) }
+  describe '#set_the_best method' do
+    let(:user) { create :user }
+    let!(:question) { create :question, author: user }
+    let!(:answer) { create :answer, question: question, author: user }
+    let!(:answer1) { create :answer, question: question, author: user }
 
-    before(:each) do
-      answers[0].best!
-      answers[0].reload
+    context 'award' do
+      let!(:award) { create :award, question: question }
+
+      it 'take assignes award to user' do
+        answer.set_the_best
+
+        expect(award.user).to eq answer.author
+      end
     end
 
-    it 'should make answer the best' do
-      expect(answers[0]).to be_best
+    it 'sets the best answer attribute' do
+      answer.set_the_best
+
+      expect(answer).to be_best
     end
 
-    it 'should change the best answer' do
-      expect(answers[1]).to_not be_best
-      expect(answers[0]).to be_best
+    it 'verifies that only 1 answer has best attribute' do
+      answer.set_the_best
+
+      expect(answer1).to_not be_best
     end
 
-    it 'only one answer can be the best' do
-      expect(question.answers.best.count).to eq 1
-    end
+    it 'shows the best answer first' do
+      answer1.set_the_best
 
-    it 'best answer is in list' do
-      third_answer = answers.third
-      third_answer.best!
-      expect(Answer.best.first).to eq third_answer
-      expect(question.answers).to eq([answers.third, answers.first, answers.second])
+      expect(Answer.all.sort_by_best.first).to eq answer1
     end
   end
 end

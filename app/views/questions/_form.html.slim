@@ -1,13 +1,27 @@
-= form_with model: @question, class: 'hidden', html: { id: "edit-question-form" } do |f|
-  = render 'shared/errors', resource: @question
-  p
-    = f.label :title, 'Question title'
+= form_with model: question, local: true do |f|
+  .field
+    = f.label :title
     = f.text_field :title
-  p
-    = f.label :body, 'Question body'
+  .field
+    = f.label :body
     = f.text_area :body
-  p
-    = f.label :files, 'Question files'
+  .field
+    = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
+
+  p Links:
+  #question-links
+    = f.fields_for :links do |link|
+      = render 'partials/link_fields',  f: link
+    .links
+      = link_to_add_association 'add link', f, :links, partial: 'partials/link_fields'
+  p Award:
   p
-    = f.submit 'Save'
+    = f.fields_for :award do |b|
+      p
+        = b.label :name
+        = b.text_field :name
+      p
+        = b.label :image
+        = b.file_field :image
+  p= f.submit 'Ask'

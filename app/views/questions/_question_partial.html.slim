@@ -1,0 +1,17 @@
+h1 = question.title
+h2 = question.body
+
+.files
+  = render 'partials/files_block', resource: question
+br
+
+.links
+  = render 'partials/links_block', resource: question
+
+
+- if current_user&.author_of?(question)
+  = link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
+  '  |
+  = link_to 'Delete question', question_path(question), method: :delete
+
+  = render 'edit_form'
