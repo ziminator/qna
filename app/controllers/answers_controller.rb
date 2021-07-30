@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :answers_author!, only: %i[update destroy]

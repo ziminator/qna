@@ -102,6 +102,10 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.4.4)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     erubi (1.10.0)
     execjs (2.8.1)
     factory_bot (6.2.0)
@@ -378,6 +382,7 @@ DEPENDENCIES
   cocoon
   coffee-rails (~> 4.2)
   devise
+  dotenv-rails
   factory_bot_rails
   jbuilder (~> 2.7)
   jquery-rails

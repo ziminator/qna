@@ -18,9 +18,9 @@ RSpec.describe Link, type: :model do
     end
   end
 
-  describe '#gist_bidy method' do
+  describe '#gist_body method' do
     it 'verifies that link is a gist' do
-      expect(gist.gist_body).to eq 'Hello_world'
+      expect(gist.gist_body).to eq 'hello_world.txt'
     end
 
     it 'verifies that link is not a gist' do
