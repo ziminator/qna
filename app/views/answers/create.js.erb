@@ -1,8 +1,6 @@
-<% if @answer.errors.present? %>
-  $('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
-<% else %>
-  $('.answers').append('<%= j render @answer %>');
-  $('.flash').html('');
-  $('.flash').append('<%= flash_messages %>');
-  $('textarea#answer_body').val('');
-<% end %>
+$('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
+$('.flash').append('<%= render 'shared/flash' %>').delay(1000).fadeOut('slow');
+<% if answer.persisted? %>
+  $('.answers').append('<%= j render answer %>');
+  $('.answer-body #answer_body').val('');
+ <% end %>

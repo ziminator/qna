@@ -1,7 +1,8 @@
 .question
-  = render @question
-
+  .question-errors
+    = render 'question_partial'
 .answers
-  = render @question.answers
-
+  .answer-errors
+  = render question.answers.sort_by_best
+- if user_signed_in?
   = render 'answers/form'

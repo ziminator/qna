@@ -1,0 +1,3 @@
+$('.answer-errors').html('<%= render 'shared/errors', resource: answer %>');
+$('.answer-<%= answer.id %>').remove();
+$('.answers').prepend('<%= j render answer %>');

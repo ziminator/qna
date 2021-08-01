@@ -1,76 +1,54 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_question, only: :create
-  before_action :find_answer, only: %i[edit update destroy best]
-
-  def edit
-
-  end
+  before_action :answers_author!, only: %i[update destroy]
 
   def create
-    @answer = @question.answers.new(answer_params)
-    @answer.user = current_user
-
+    @answer = question.answers.new(answer_params)
+    @answer.author = current_user
     if @answer.save
-      redirect_to @question, notice: 'Your answer created sucessfully!'
-    else
-      render 'questions/show'
+      flash.now[:notice] = 'Your answer was successfully created.'
     end
   end
 
   def update
-    if check_authorship!
-      if @answer.update(answer_params)
-        redirect_answer
-        flash[:notice] = 'Your answer sucessfully updated.'
-      else
-        render 'questions/show'
-      end
+    @question = answer.question
+    answer.update(answer_params)
+    flash.now[:notice] = 'Your answer was successfully updated.'
+  end
+
+  def destroy
+    @question = answer.question
+    answer.destroy
+    flash.now[:alert] = 'Answer was deleted.'
+  end
+
+  def select_best
+    if current_user.author_of?(answer.question)
+      answer.set_the_best
+      @question = answer.question
     else
-      redirect_answer
-      flash[:notice] = 'You are not an author of this question!'
+      head 403
     end
-  end
-
-  def destroy
-    if check_authorship!
-      @answer.destroy
-      flash[:notice] = 'Your answer deleted sucessfully!'
-    end
-    redirect_answer
-  end
-
-  def best
-    @answer.best! if current_user.author?(@answer.question)
-  end
-
-  def destroy
-    if current_user.author?(@answer)
-      @answer.destroy
-      flash[:notice] = 'Your answer deleted sucessfully!'
-    end
-    redirect_to @answer.question
   end
 
   private
 
-  def find_question
-    @question = Question.find(params[:question_id])
+  def answers_author!
+    head :forbidden unless current_user&.author_of?(answer)
   end
+
+  def question
+    @question ||= params[:question_id] ? Question.with_attached_files.find(params[:question_id]) : nil
+  end
+
+  def answer
+    @answer ||= params[:id] ? Answer.find(params[:id]) : Answer.new
+  end
+
+  helper_method :question, :answer
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
-  end
-
-  def find_answer
-    @answer = Answer.with_attached_files.find(params[:id])
-  end
-
-  def check_authorship!
-    current_user.author?(@answer)
-  end
-
-  def redirect_answer
-    redirect_to @answer.question
+    params.require(:answer).permit(:body,
+                                   files: [], links_attributes: [:name, :url])
   end
 end

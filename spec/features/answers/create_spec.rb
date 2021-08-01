@@ -9,7 +9,7 @@ feature 'User can create answer', %q{
   given(:user) { create(:user) }
   given!(:question) { create(:question, user: user) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
       visit question_path(question)
@@ -18,14 +18,14 @@ feature 'User can create answer', %q{
     scenario 'answer the question' do
       fill_in 'Body', with: 'answer body'
 
-      click_on 'Answer'
+      click_on 'Create answer'
       expect(page).to have_content 'answer body'
     end
 
     scenario 'answer the question with error' do
       fill_in 'Body', with: ''
 
-      click_on 'Answer'
+      click_on 'Create answer'
       expect(page).to have_content "Body can't be blank"
     end
 
@@ -33,7 +33,7 @@ feature 'User can create answer', %q{
       fill_in 'Body', with: 'answer body'
 
       attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
-      click_on 'Answer'
+      click_on 'Create answer'
 
       expect(page).to have_link 'rails_helper.rb'
       expect(page).to have_link 'spec_helper.rb'

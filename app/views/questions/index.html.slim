@@ -1,5 +1,15 @@
-p= link_to 'Ask question', new_question_path
+.row.justify-content-center.mt-3
+  .col.col-md-4
 
-- @questions.each do |question|
-  p= link_to question.title, question_path(question)
+table.table.table-striped
+  thead.thead-light
+    tr
+      th scope="col"
+        | Question title
+      th scope="col"
+        | Question ID
+
+        = render @questions
+  p= link_to 'Ask question', new_question_path, class: 'nav-link'
+
 
