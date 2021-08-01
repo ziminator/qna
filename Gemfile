@@ -15,15 +15,22 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'slim-rails'
 gem 'devise'
+gem 'bootstrap'
+gem 'sassc-rails'
 gem "twitter-bootstrap-rails"
 gem 'jquery-rails'
 gem "aws-sdk-s3", require: false
+gem 'cocoon'
+gem 'rubocop', require: false
+gem 'validate_url'
+gem 'octokit'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails', '~> 3.8'
   gem 'factory_bot_rails'
+  gem 'dotenv-rails'
 end
 
 group :development do
@@ -41,6 +48,7 @@ group :test do
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+  #Testing
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
   gem 'launchy'

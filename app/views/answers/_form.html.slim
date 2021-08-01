@@ -1,11 +1,16 @@
-= form_with model: [@question, @answer], class: 'hidden', html: { id: "create-answer"} do |f|
-  .answer-errors
-    = render 'shared/errors', resource: @answer
-  p
+= form_with model: [question, @answer], class: 'answer-body' do |f|
+  .field
     = f.label :body, 'Answer body'
     = f.text_area :body
-  p
-    = f.label :files, 'Answer files'
+  .field
+    = f.label :files
     = f.file_field :files, multiple: true, direct_upload: true
-  p
-    = f.submit 'Answer'
+
+  p Links:
+  #answer-links
+    = f.fields_for :links do |link|
+      = render 'partials/link_fields', f: link
+    .links
+      = link_to_add_association 'additional link', f, :links, partial: 'partials/link_fields'
+  .submit
+    = f.submit 'Create answer'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_24_145619) do
+ActiveRecord::Schema.define(version: 2021_07_30_052918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,10 +41,30 @@ ActiveRecord::Schema.define(version: 2019_11_24_145619) do
     t.bigint "question_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "author_id", null: false
     t.boolean "best", default: false
+    t.index ["author_id"], name: "index_answers_on_author_id"
     t.index ["question_id"], name: "index_answers_on_question_id"
-    t.index ["user_id"], name: "index_answers_on_user_id"
+  end
+
+  create_table "awards", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "question_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_awards_on_question_id"
+    t.index ["user_id"], name: "index_awards_on_user_id"
+  end
+
+  create_table "links", force: :cascade do |t|
+    t.string "name"
+    t.string "url"
+    t.string "linkable_type"
+    t.bigint "linkable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["linkable_type", "linkable_id"], name: "index_links_on_linkable_type_and_linkable_id"
   end
 
   create_table "questions", force: :cascade do |t|
@@ -52,8 +72,8 @@ ActiveRecord::Schema.define(version: 2019_11_24_145619) do
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_questions_on_user_id"
+    t.bigint "author_id", null: false
+    t.index ["author_id"], name: "index_questions_on_author_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -70,6 +90,6 @@ ActiveRecord::Schema.define(version: 2019_11_24_145619) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "answers", "questions"
-  add_foreign_key "answers", "users"
-  add_foreign_key "questions", "users"
+  add_foreign_key "answers", "users", column: "author_id"
+  add_foreign_key "questions", "users", column: "author_id"
 end
