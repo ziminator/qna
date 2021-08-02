@@ -21,6 +21,8 @@
                   li.highlight
                     = link_to 'Profile', '#'
       li.nav-item.nav-link
+        = link_to "Welcome! #{current_user.email}",'#'
+      li.nav-item.nav-link
         = link_to 'Awards', awards_path
       li.nav-item.nav-link
         = link_to 'Logout', destroy_user_session_path, method: :delete

@@ -1,6 +1,11 @@
 . class="answer-#{answer.id}"
   .answer-update-errors
   p = answer.body
+
+  .voting
+    - if user_signed_in?
+      = render 'votes/vote', resource: answer
+
   br
   .files
     = render 'partials/files_block', resource: answer

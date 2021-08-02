@@ -1,0 +1,12 @@
+= link_to '', polymorphic_path(resource, action: :vote_up),
+      role:   'button',
+      class:  'fa fa-caret-up vote',
+      method: :patch,
+      remote: true
+span.score
+  = resource.rating
+= link_to '', polymorphic_path(resource, action: :vote_down),
+      role:   'button',
+      class:  'fa fa-caret-down vote',
+      method: :patch,
+      remote: true

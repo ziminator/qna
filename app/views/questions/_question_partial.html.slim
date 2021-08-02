@@ -15,3 +15,8 @@ br
   = link_to 'Delete question', question_path(question), method: :delete
 
   = render 'edit_form'
+
+. class="question-#{question.id}"
+  .voting
+    - if user_signed_in?
+      = render 'votes/vote', resource: question

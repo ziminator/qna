@@ -1,9 +1,6 @@
-<% if @question.errors.present? %>
-  $('.question-errors').html('<%= render 'shared/errors', resource: @question %>');
-<% else %>
-  $('.flash').append('<%= flash_messages %>');
-  $('.question-title').html('<%= j @question.title %>');
-  $('.question-body').html('<%= j @question.body %>');
-  $('form#edit-question-form').hide()
-  $('.edit-question-link').show()
+$('.question-errors').html('<%= render 'shared/errors', resource: question %>');
+
+<% if !question.errors.present? %>
+  $('.flash').append('<%= j render 'shared/flash' %>');
+  $('.question').html('<%= j render 'question_partial' %>');
 <% end %>
