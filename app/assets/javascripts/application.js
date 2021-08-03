@@ -18,7 +18,12 @@
 //= require twitter/bootstrap
 //= require popper
 //= require action_cable
+//= require skim
 //= require_tree .
 
-var App = App || {};
-App.cable = ActionaCable.createConsumer();
+(function() {
+    this.App || (this.App = {});
+
+    App.cable = ActionCable.createConsumer();
+
+}).call(this);

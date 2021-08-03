@@ -1,0 +1,5 @@
+.col-4.col-md-6
+  h5.question-title
+    p Question title ||
+    a href="/question/#{@question.id}" #{@question.title}
+  h6 Question id#{@question.id}

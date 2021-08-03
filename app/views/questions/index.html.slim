@@ -1,15 +1,13 @@
-.row.justify-content-center.mt-3
-  .col.col-md-4
+.questions-index.row.d-flex.justify-content-center
+  .col-sm-8.justify-content-center
+    .card
+      .card-header.bg-light.d-flex.justify-content-center
+        h5 Check out available questions!
+        .card-body
+          .row.questions
+            = render @questions
 
-table.table.table-striped
-  thead.thead-light
-    tr
-      th scope="col"
-        | Question title
-      th scope="col"
-        | Question ID
 
-        = render @questions
-  p= link_to 'Ask question', new_question_path, class: 'nav-link'
+          p= link_to 'Ask question', new_question_path, class: 'nav-link'
 
 

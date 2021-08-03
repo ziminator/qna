@@ -11,8 +11,13 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answers = question.answers.includes(:links).with_attached_files.order(best: :desc)
     @answer = question.answers.new
     @answer.links.new
+    @comment = Comment.new
+
+    gon.push question_id: question.id
+    gon.push user_id: current_user&.id
   end
 
   def new
@@ -20,8 +25,7 @@ class QuestionsController < ApplicationController
     @award = question.build_award
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @question = Question.new(question_params)
@@ -46,6 +50,14 @@ class QuestionsController < ApplicationController
 
   private
 
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+        'questions',
+        { question: question }
+    )
+  end
+
   def questions_author!
     head :forbidden unless current_user&.author_of?(question)
   end
@@ -64,13 +76,5 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body,
                                      files: [], links_attributes: %i[id name url _destroy],
                                      award_attributes: %i[name image])
-  end
-
-  def publish_question
-    return if @question.errors.any?
-    ActionCable.server.broadcast(
-      'questions',
-      { question: question }
-    )
   end
 end

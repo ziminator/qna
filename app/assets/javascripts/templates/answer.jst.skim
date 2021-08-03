@@ -1,0 +1,41 @@
+div class="answer-#{@answer.id}"
+
+  p = @answer.body
+
+  .voting
+    - if gon.user_id?
+      a.fa.fa-caret-up.vote[data-remote="true"
+                            data-method="patch"
+                            href="/answers/#{@answer.id}/vote_up"]
+
+      span.rating 0
+
+      a.fa.fa-caret-down.vote[data-remote="true"
+                              data-method="patch"
+                              href="/answers/#{@answer.id}/vote_down"]
+
+
+  br
+  .files
+    p Files:
+    - if @files.length != 0
+      .storages
+        - for file in @files
+          p class="storage-#{file.id}"
+            a href="#{file.url}" #{file.name}
+
+
+
+  br
+  .answer-links
+    p Links:
+    - if @links.length != 0
+      .links
+        p Links:
+        ul
+          - for link in @links
+            - if link.gist
+              p = link.gist
+            li class="link-#{link.id}"
+              a href="#{link.url}" #{link.name}
+
