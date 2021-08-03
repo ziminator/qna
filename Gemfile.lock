@@ -136,6 +136,8 @@ GEM
     ffi (1.15.3-java)
     ffi (1.15.3-x64-mingw32)
     ffi (1.15.3-x86-mingw32)
+    font-awesome-sass (5.15.1)
+      sassc (>= 1.11)
     globalid (0.5.1)
       activesupport (>= 5.0)
     i18n (1.8.10)
@@ -388,6 +390,7 @@ DEPENDENCIES
   devise
   dotenv-rails
   factory_bot_rails
+  font-awesome-sass (~> 5.15.1)
   jbuilder (~> 2.7)
   jquery-rails
   launchy

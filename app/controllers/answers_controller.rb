@@ -2,6 +2,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :answers_author!, only: %i[update destroy]
 
+  include Voted
+
   def create
     @answer = question.answers.new(answer_params)
     @answer.author = current_user

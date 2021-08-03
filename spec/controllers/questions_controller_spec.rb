@@ -171,5 +171,10 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
+
+    it_behaves_like 'voted' do
+      let(:user) { create :user }
+      let(:model) { create :question, author: user }
+    end
   end
-  end
+end

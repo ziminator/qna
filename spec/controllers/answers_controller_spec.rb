@@ -146,5 +146,9 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to have_http_status(403)
       end
     end
+
+    it_behaves_like 'voted' do
+      let(:model) { create :answer, question: question, author: user }
+    end
   end
 end
