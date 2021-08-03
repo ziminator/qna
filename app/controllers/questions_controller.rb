@@ -2,6 +2,8 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :questions_author!, only: %i[update destroy]
 
+  after_action :publish_question, only: %i[create]
+
   include Voted
 
   def index
@@ -62,5 +64,13 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body,
                                      files: [], links_attributes: %i[id name url _destroy],
                                      award_attributes: %i[name image])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+      'questions',
+      { question: question }
+    )
   end
 end

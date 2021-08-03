@@ -17,4 +17,8 @@
 //= require cocoon
 //= require twitter/bootstrap
 //= require popper
+//= require action_cable
 //= require_tree .
+
+var App = App || {};
+App.cable = ActionaCable.createConsumer();
