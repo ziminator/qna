@@ -4,6 +4,8 @@ RSpec.describe Answer, type: :model do
   it { should belong_to :question }
   it { should belong_to :author }
   it { should have_many(:links).dependent(:destroy) }
+  it { should have_many(:votes).dependent(:destroy) }
+  it { should have_many(:comments).dependent(:destroy) }
 
   it { should validate_presence_of :body }
 
@@ -45,6 +47,10 @@ RSpec.describe Answer, type: :model do
       answer1.set_the_best
 
       expect(Answer.all.sort_by_best.first).to eq answer1
+    end
+
+    it_behaves_like 'votable' do
+      let(:model) { create :answer, question: question, author: user }
     end
   end
 end

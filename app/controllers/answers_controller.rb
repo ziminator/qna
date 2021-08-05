@@ -1,6 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :answers_author!, only: %i[update destroy]
+  after_action :publish_answer, only: %i[create]
 
   include Voted
 
@@ -52,5 +53,21 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body,
                                    files: [], links_attributes: [:name, :url])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    files = []
+    answer.files.each do |file|
+      files << { url: url_for(file), name: file.filename.to_s }
+    end
+
+    ActionCable.server.broadcast(
+        "answer_for_question_#{answer.question_id}",
+        { answer: answer,
+          links: answer.links,
+          files: files }
+    )
   end
 end

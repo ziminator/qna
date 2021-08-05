@@ -1,6 +1,9 @@
 . class="answer-#{answer.id}"
-  .answer-update-errors
+
   p = answer.body
+
+  .comment-block
+    = render 'comments/form', resource: answer
 
   .voting
     - if user_signed_in?

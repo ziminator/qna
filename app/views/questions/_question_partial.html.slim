@@ -8,7 +8,6 @@ br
 .links
   = render 'partials/links_block', resource: question
 
-
 - if current_user&.author_of?(question)
   = link_to 'Edit question', '#', class: 'edit-question-link', data: { question_id: question.id }
   '  |
@@ -20,3 +19,6 @@ br
   .voting
     - if user_signed_in?
       = render 'votes/vote', resource: question
+
+  .comment-block
+    = render 'comments/form', resource: question

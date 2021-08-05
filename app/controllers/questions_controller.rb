@@ -2,6 +2,8 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :questions_author!, only: %i[update destroy]
 
+  after_action :publish_question, only: %i[create]
+
   include Voted
 
   def index
@@ -9,8 +11,13 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answers = question.answers.includes(:links).with_attached_files.order(best: :desc)
     @answer = question.answers.new
     @answer.links.new
+    @comment = Comment.new
+
+    gon.push question_id: question.id
+    gon.push user_id: current_user&.id
   end
 
   def new
@@ -18,8 +25,7 @@ class QuestionsController < ApplicationController
     @award = question.build_award
   end
 
-  def edit
-  end
+  def edit; end
 
   def create
     @question = Question.new(question_params)
@@ -43,6 +49,14 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def publish_question
+    return if @question.errors.any?
+    ActionCable.server.broadcast(
+        'questions',
+        { question: question }
+    )
+  end
 
   def questions_author!
     head :forbidden unless current_user&.author_of?(question)

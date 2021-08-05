@@ -1,6 +1,7 @@
-tr
-  td.align-middle
+.col-4.col-md-6
+  h5.question-title
+    p Question title ||
     = link_to question.title, question_path(question)
-  td.align-middle
-    = "Question_#{question.id}"
-
+  h6
+    | Question id
+    = "#{question.id}"

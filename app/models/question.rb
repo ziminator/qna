@@ -3,6 +3,7 @@ class Question < ApplicationRecord
   include FilesAttachable
   include LinksAttachable
   include Votable
+  include Commentable
 
   has_many :answers, dependent: :destroy
   has_one :award, dependent: :destroy

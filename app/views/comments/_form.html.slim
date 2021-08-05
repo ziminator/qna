@@ -1,0 +1,14 @@
+.comments-list[id="comments-list-#{resource.id}"]
+  = render resource.comments
+
+.comment-errors
+
+- if user_signed_in?
+  = form_with model: [resource, Comment.new],
+          method: :post,
+          class: 'create-comment' do |f|
+    .field
+      = f.label :comment_body, 'Comment body'
+      = f.text_area :comment_body
+    .submit
+      = f.submit 'Create comment'
