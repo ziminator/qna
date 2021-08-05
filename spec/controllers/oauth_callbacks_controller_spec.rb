@@ -6,7 +6,7 @@ RSpec.describe OauthCallbacksController, type: :controller do
   end
 
   describe 'Github' do
-    let(:oauth_data) { {'provider' => 'github', 'uid' => 123 } }
+    let(:oauth_data) { {'provider' => 'github', 'uid' => '123' } }
 
     it 'finds user from oauth data' do
       allow(request.env).to receive(:[]).and_call_original
@@ -27,7 +27,6 @@ RSpec.describe OauthCallbacksController, type: :controller do
         expect(subject.current_user).to eq user
       end
 
-
       it 'redirects to root path' do
         expect(response).to redirect_to root_path
       end
@@ -43,11 +42,9 @@ RSpec.describe OauthCallbacksController, type: :controller do
         expect(response).to redirect_to root_path
       end
 
-
       it 'does not login user' do
         expect(subject.current_user).to_not be
       end
     end
-
   end
 end

@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, omniauth_providers: [:github]
+         :omniauthable, omniauth_providers: %i[github]
 
   has_many :answers, foreign_key: 'author_id', dependent: :destroy
   has_many :questions, foreign_key: 'author_id', dependent: :destroy

@@ -28,7 +28,6 @@ gem 'octokit'
 gem 'font-awesome-sass', '~> 5.15.1'
 gem 'skim'
 gem 'gon'
-gem 'oauth2'
 gem 'omniauth'
 gem 'omniauth-github'
 

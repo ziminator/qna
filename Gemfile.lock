@@ -433,7 +433,6 @@ DEPENDENCIES
   jquery-ui-rails
   launchy
   listen (>= 3.0.5, < 3.2)
-  oauth2
   octokit
   omniauth
   omniauth-github
