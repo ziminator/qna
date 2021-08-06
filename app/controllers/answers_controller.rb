@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
 
   include Voted
 
+  authorize_resource
+
   def create
     @answer = question.answers.new(answer_params)
     @answer.author = current_user

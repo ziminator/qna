@@ -2,6 +2,8 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   after_action :publish_comment, only: %i[create]
 
+  authorize_resource
+
   def create
     @comment = commented_object.comments.new(body: comment_params[:comment_body])
     @comment.author = current_user

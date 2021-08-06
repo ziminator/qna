@@ -1,9 +1,13 @@
 class ApplicationController < ActionController::Base
-  include Pundit
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_url, alert: exception.message
+
+    respond_to do |format|
+      format.html { redirect_to root_url, alert: exception.message }
+      format.js { render status: :forbidden }
+      format.json { render json: exception.message, status: :forbidden }
+    end
   end
 
-  #check_authorization
+  check_authorization unless: :devise_controller?
 end
