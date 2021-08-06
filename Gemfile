@@ -19,6 +19,7 @@ gem 'bootstrap'
 gem 'sassc-rails'
 gem "twitter-bootstrap-rails"
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem "aws-sdk-s3", require: false
 gem 'cocoon'
 gem 'rubocop', require: false
@@ -27,6 +28,8 @@ gem 'octokit'
 gem 'font-awesome-sass', '~> 5.15.1'
 gem 'skim'
 gem 'gon'
+gem 'omniauth'
+gem 'omniauth-github'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
