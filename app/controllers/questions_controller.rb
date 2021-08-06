@@ -4,6 +4,8 @@ class QuestionsController < ApplicationController
 
   after_action :publish_question, only: %i[create]
 
+  authorize_resource
+
   include Voted
 
   def index
