@@ -230,6 +230,8 @@ GEM
       nio4r (~> 2.0)
     puma (4.3.8-java)
       nio4r (~> 2.0)
+    pundit (2.1.0)
+      activesupport (>= 3.0.0)
     racc (1.5.2)
     racc (1.5.2-java)
     rack (2.2.3)
@@ -440,6 +442,7 @@ DEPENDENCIES
   omniauth-github
   pg (>= 0.18, < 2.0)
   puma (~> 4.3)
+  pundit
   rails (~> 5.2.3)
   rails-controller-testing
   rspec-rails (~> 3.8)

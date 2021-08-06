@@ -14,6 +14,7 @@ class AnswersController < ApplicationController
   end
 
   def update
+    authorize @answer
     @question = answer.question
     answer.update(answer_params)
     flash.now[:notice] = 'Your answer was successfully updated.'
