@@ -5,6 +5,8 @@ class AnswersController < ApplicationController
 
   include Voted
 
+  authorize_resource
+
   def create
     @answer = question.answers.new(answer_params)
     @answer.author = current_user
@@ -14,6 +16,7 @@ class AnswersController < ApplicationController
   end
 
   def update
+    authorize @answer
     @question = answer.question
     answer.update(answer_params)
     flash.now[:notice] = 'Your answer was successfully updated.'

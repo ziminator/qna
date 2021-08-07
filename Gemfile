@@ -30,6 +30,10 @@ gem 'skim'
 gem 'gon'
 gem 'omniauth'
 gem 'omniauth-github'
+gem 'omniauth-vkontakte'
+gem 'omniauth-instagram'
+gem 'cancancan'
+gem 'pundit'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -37,6 +41,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8'
   gem 'factory_bot_rails'
   gem 'dotenv-rails'
+  gem 'letter_opener'
+  gem 'capybara-email'
 end
 
 group :development do

@@ -7,7 +7,7 @@
           .row.questions
             = render @questions
 
-
+        - if can?(:create, Question)
           p= link_to 'Ask question', new_question_path, class: 'nav-link'
 
 
