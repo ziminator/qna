@@ -38,6 +38,7 @@ class Ability
 
     can :select_best, Answer, question: { author_id: user.id }
 
+can :me, User, id: user.id
   end
 end
 
