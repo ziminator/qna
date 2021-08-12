@@ -1,11 +1,13 @@
 FactoryBot.define do
   sequence :email do |n|
-    "user#{n}@test.com"
+    "user#{n}@mail.net"
   end
 
   factory :user do
     email
-    password { '12345678' }
-    password_confirmation { '12345678' }
+    password { '111111' }
+    password_confirmation { '111111' }
+
+    before(:create) {|user| user.skip_confirmation! }
   end
 end

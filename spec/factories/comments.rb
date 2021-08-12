@@ -6,4 +6,14 @@ FactoryBot.define do
       comment_body { nil }
     end
   end
+
+  factory :question_comment, class: Comment do
+    association :commentable, factory: :question
+    body { "Comment text" }
+  end
+
+  factory :answer_comment, class: Comment do
+    association :commentable, factory: :answer
+    body { "Comment text" }
+  end
 end
