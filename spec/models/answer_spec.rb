@@ -49,6 +49,17 @@ RSpec.describe Answer, type: :model do
       expect(Answer.all.sort_by_best.first).to eq answer1
     end
 
+    describe 'new answer notifier' do
+      let(:user) { create :user }
+      let(:question) { create :question }
+
+      it 'notifies author of question when new answer posted to it' do
+        expect(NewAnswerNotifierJob).to receive(:perform_later).with(instance_of(Answer))
+        Answer.create(question: question, author: user, body: 'new answer')
+      end
+
+    end
+
     it_behaves_like 'votable' do
       let(:model) { create :answer, question: question, author: user }
     end

@@ -85,4 +85,8 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
+FactoryBot::SyntaxRunner.class_eval do
+  include ActionDispatch::TestProcess
+end
+
 OmniAuth.config.test_mode = true

@@ -12,6 +12,8 @@ class User < ApplicationRecord
   has_many :awards, dependent: :destroy
   has_many :votes, dependent: :destroy
   has_many :authorizations, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribed_questions, through: :subscriptions, source: :question
 
   validates :email, format: { without: TEMP_EMAIL_REGEX }, on: :update
 
@@ -29,5 +31,9 @@ class User < ApplicationRecord
 
   def create_authorization(auth)
     authorizations.create(provider: auth.provider, uid: auth.uid)
+  end
+
+  def subscribed_to_question?(question)
+    subscribed_questions.exists?(question.id)
   end
 end
