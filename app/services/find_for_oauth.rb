@@ -31,5 +31,4 @@ class Services::FindForOauth
   def make_email
     "#{Devise.friendly_token[0, 20]}@change.me"
   end
-
 end

@@ -7,6 +7,8 @@ RSpec.describe User, type: :model do
   it { should have_many(:votes).dependent(:destroy) }
   it { should have_many(:comments).dependent(:destroy) }
   it { should have_many(:authorizations).dependent(:destroy) }
+  it { should have_many(:subscriptions).dependent(:destroy) }
+  it { should have_many(:subscribed_questions).through(:subscriptions) }
 
   it { should_not allow_value('qwerty@change.me').for(:email).on(:update) }
 
@@ -49,6 +51,22 @@ RSpec.describe User, type: :model do
 
     it 'true' do
       expect(user_valid.email_verified?).to be_truthy
+    end
+  end
+
+  describe '#subscribed_to_question?' do
+    let(:user) { create :user }
+    let(:question) { create :question }
+    let(:user2) { create :user }
+
+    it 'true' do
+      user.subscriptions.create!(question: question)
+
+      expect(user).to be_subscribed_to_question(question)
+    end
+
+    it 'false' do
+      expect(user2).to_not be_subscribed_to_question(question)
     end
   end
 end

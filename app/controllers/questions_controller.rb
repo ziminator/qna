@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :questions_author!, only: %i[update destroy]
@@ -9,6 +11,7 @@ class QuestionsController < ApplicationController
   authorize_resource
 
   def index
+    authorize! :read, Question
     @questions = Question.all
   end
 
@@ -72,7 +75,11 @@ class QuestionsController < ApplicationController
     @answer = question.answers.new
   end
 
-  helper_method :question
+  helper_method :question, :subscription
+
+  def subscription
+    @subscription ||= question.subscriptions.find_by(user: current_user)
+  end
 
   def question_params
     params.require(:question).permit(:title, :body,
