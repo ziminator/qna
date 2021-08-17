@@ -25,6 +25,8 @@ RSpec.describe Question, type: :model do
     let(:model) { create :question, author: user }
   end
 
+  it_behaves_like 'sphinxable', Question
+
   describe 'reputation' do
     let(:question) { build(:question) }
 
