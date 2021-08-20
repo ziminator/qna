@@ -63,5 +63,7 @@ RSpec.describe Answer, type: :model do
     it_behaves_like 'votable' do
       let(:model) { create :answer, question: question, author: user }
     end
+
+    it_behaves_like 'sphinxable', Answer
   end
 end

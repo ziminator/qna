@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   authenticate :user, lambda { |u| u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
+    mount Sidekiq::Web =>'/sidekiq'
   end
 
   use_doorkeeper
@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   match 'users/:id/finish_sign_up', to: 'users#finish_sign_up', via: [:get, :patch], as: :finish_sign_up
 
   root to: 'questions#index'
+
+  get '/search', to: 'search#search'
 
   concern :votable do
     member do

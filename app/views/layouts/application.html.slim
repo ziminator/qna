@@ -12,6 +12,7 @@ html
     = action_cable_meta_tag
   body
     = render 'layouts/header'
+    = render 'search/search_form'
     main
       .container-fluid
         = render 'shared/flash', flash: flash
