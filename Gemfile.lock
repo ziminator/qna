@@ -495,6 +495,7 @@ GEM
     websocket-extensions (0.1.5)
     whenever (1.0.0)
       chronic (>= 0.6.3)
+    will_paginate (3.1.8)
     xpath (3.2.0)
       nokogiri (~> 1.8)
 
@@ -571,6 +572,7 @@ DEPENDENCIES
   webdrivers
   webpacker (~> 4.0)
   whenever
+  will_paginate (~> 3.1.0)
 
 RUBY VERSION
    ruby 2.6.3p62

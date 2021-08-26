@@ -42,9 +42,10 @@ gem 'sinatra', require: false
 gem 'whenever', require: false
 gem 'mysql2'
 gem 'thinking-sphinx'
+gem 'mini_racer'
+gem 'will_paginate', '~> 3.1.0'
 gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
 gem 'ed25519', '>= 1.2', '< 1.3'
-gem 'mini_racer'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
