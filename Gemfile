@@ -3,7 +3,6 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.3'
 
-gem 'libv8-node'
 gem 'rails', '~> 5.2.3'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.3'
