@@ -20,8 +20,6 @@ gem 'sassc-rails'
 gem "twitter-bootstrap-rails"
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'libv8'
-gem 'libv8-node'
 gem "aws-sdk-s3", require: false
 gem 'cocoon'
 gem 'rubocop', require: false
