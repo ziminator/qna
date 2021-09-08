@@ -1,7 +1,8 @@
-.col-4.col-md-6
-  h5.question-title
-    p Question title ||
-    = link_to question.title, question_path(question)
-  h6
-    | Question id
-    = "#{question.id}"
+- cache collection_cache_key_for :question do
+  .col-4.col-md-6
+    h5.question-title
+      p Question title ||
+      = link_to question.title, question_path(question)
+    h6
+      | Question id
+      = "#{question.id}"
