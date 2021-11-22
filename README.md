@@ -1,24 +1,30 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+#Учебный проект Q&A онлайн школы Thinknetica
 
-Things you may want to cover:
+#Цель проекта
+Создать ресурс, где пользователи могут задавать вопросы и получать ответы на вопросы.
 
-* Ruby version
+#Аутентификация
+Протокол OAuth, пользователи могут зарегистрироваться или войти через соцсети.
 
-* System dependencies
+#Авторизация
+Авторизация пользователей реализована через гем cancancan
 
-* Configuration
+#Рейтинг и рассылка уведомлений
+Зарегистрированный пользователь может проголосовать за чужой понравившийся вопрос.
+Автор вопроса может выбрать лучший ответ.
+Пользователь может подписаться на рассылку почтовых уведомлений о новых ответах на вопрос.
 
-* Database creation
+#Автоматическое обновление ответов
+Ответы на вопросы обновляются автоматически, через websocket. Реализовано через ActionCable.
 
-* Database initialization
+#Реализация API
+API реализован через гем doorkeeper.
 
-* How to run the test suite
+#Полнотекстовый поиск
+Реализован полнотекстовый поиск на Sphinx
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+#Деплой и мониторинг
+Финальный деплой проекта через Capistrano на тестовый виртуальный сервер.
+Мониторинг работающих сервисов в monit.
